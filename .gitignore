@@ -1,6 +1,7 @@
 /target
 **/*.rs.bk
-
+.vscode
+.idea
 
 #Added by cargo
 #
