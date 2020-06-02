@@ -26,6 +26,10 @@ impl Component for TopAppBar {
         Self { props }
     }
 
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        false
+    }
+
     fn change(&mut self, props: Props) -> ShouldRender {
         if self.props != props {
             self.props = props;
@@ -33,10 +37,6 @@ impl Component for TopAppBar {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
-        false
     }
 
     fn view(&self) -> Html {

@@ -46,8 +46,12 @@ impl Component for TextArea {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        self.inner = self.node_ref.cast::<Element>().map(MDCTextField::new);
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::ValueChanged(s) => {
+                self.props.onchange.emit(s);
+            }
+        };
         false
     }
 
@@ -61,15 +65,6 @@ impl Component for TextArea {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::ValueChanged(s) => {
-                self.props.onchange.emit(s);
-            }
-        };
-        false
     }
 
     fn view(&self) -> Html {

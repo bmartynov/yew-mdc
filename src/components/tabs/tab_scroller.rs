@@ -22,11 +22,11 @@ impl Component for TabScroller {
         Self { props }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
         false
     }
 
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+    fn change(&mut self, _props: Self::Properties) -> bool {
         false
     }
 

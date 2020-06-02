@@ -13,6 +13,7 @@ pub struct Card {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub id: String,
@@ -44,15 +45,6 @@ impl Component for Card {
         Self { props, link }
     }
 
-    fn change(&mut self, props: Props) -> ShouldRender {
-        if self.props != props {
-            self.props = props;
-            true
-        } else {
-            false
-        }
-    }
-
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::RightClick(event) => {
@@ -69,6 +61,15 @@ impl Component for Card {
             }
         }
         false
+    }
+
+    fn change(&mut self, props: Props) -> ShouldRender {
+        if self.props != props {
+            self.props = props;
+            true
+        } else {
+            false
+        }
     }
 
     fn view(&self) -> Html {

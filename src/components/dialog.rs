@@ -17,6 +17,7 @@ pub struct Dialog {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub id: String,
@@ -67,21 +68,11 @@ impl Component for Dialog {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        if let Some(elem) = self.node_ref.cast::<Element>() {
-            let dialog = MDCDialog::new(elem);
-            if let Some(action) = &self.props.escape_key_action {
-                dialog.set_escape_key_action(action);
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::Closed { action } => {
+                self.props.onclosed.emit(action);
             }
-            if let Some(action) = &self.props.scrim_click_action {
-                dialog.set_scrim_click_action(action);
-            }
-            dialog.set_auto_stack_buttons(self.props.auto_stack_buttons);
-            dialog.listen("MDCDialog:closed", &self.close_callback);
-            if self.props.open {
-                dialog.open();
-            }
-            self.inner = Some(dialog);
         }
         false
     }
@@ -102,15 +93,6 @@ impl Component for Dialog {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::Closed { action } => {
-                self.props.onclosed.emit(action);
-            }
-        }
-        false
     }
 
     fn view(&self) -> Html {

@@ -27,6 +27,7 @@ pub struct Props {
     pub onclose: Option<Callback<()>>,
     #[prop_or_default]
     pub timeout_ms: Option<u16>,
+    #[prop_or_default]
     pub open: bool,
 }
 
@@ -56,17 +57,18 @@ impl Component for Snackbar {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        if let Some(elem) = self.node_ref.cast::<Element>() {
-            let inner = MDCSnackbar::new(elem);
-            if let Some(timeout_ms) = &self.props.timeout_ms {
-                inner.set_timeout_ms(*timeout_ms);
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::ActionClicked => {
+                if let Some(ref callback) = self.props.onactionclicked {
+                    callback.emit(());
+                }
             }
-            if self.props.open {
-                inner.open();
+            Msg::Closed => {
+                if let Some(ref callback) = self.props.onclose {
+                    callback.emit(());
+                }
             }
-            inner.listen("MDCSnackbar:closed", &self.close_callback);
-            self.inner = Some(inner);
         }
         false
     }
@@ -85,22 +87,6 @@ impl Component for Snackbar {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::ActionClicked => {
-                if let Some(ref callback) = self.props.onactionclicked {
-                    callback.emit(());
-                }
-            }
-            Msg::Closed => {
-                if let Some(ref callback) = self.props.onclose {
-                    callback.emit(());
-                }
-            }
-        }
-        false
     }
 
     fn view(&self) -> Html {

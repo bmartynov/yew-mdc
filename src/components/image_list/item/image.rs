@@ -6,6 +6,7 @@ pub struct Image {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub src: String,
     #[prop_or_default]
     pub id: String,
@@ -18,6 +19,7 @@ pub struct Props {
 }
 
 use std::borrow::Cow;
+
 impl Image {
     // Note: This should probably be done for any component exposing "classes"
     // to improve performance by avoiding `format!` whereever unnecessary.
@@ -50,6 +52,10 @@ impl Component for Image {
         Self { props }
     }
 
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        false
+    }
+
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         if self.props != props {
             self.props = props;
@@ -57,10 +63,6 @@ impl Component for Image {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
-        false
     }
 
     fn view(&self) -> Html {

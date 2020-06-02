@@ -12,6 +12,7 @@ pub struct Item {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub id: String,
@@ -33,15 +34,6 @@ impl Component for Item {
         Self { props, link }
     }
 
-    fn change(&mut self, props: Props) -> ShouldRender {
-        if self.props != props {
-            self.props = props;
-            true
-        } else {
-            false
-        }
-    }
-
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::Clicked(ev) => {
@@ -49,6 +41,15 @@ impl Component for Item {
             }
         }
         false
+    }
+
+    fn change(&mut self, props: Props) -> ShouldRender {
+        if self.props != props {
+            self.props = props;
+            true
+        } else {
+            false
+        }
     }
 
     fn view(&self) -> Html {

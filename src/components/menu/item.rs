@@ -31,15 +31,6 @@ impl Component for Item {
         Self { props, link }
     }
 
-    fn change(&mut self, props: Props) -> ShouldRender {
-        if self.props != props {
-            self.props = props;
-            true
-        } else {
-            false
-        }
-    }
-
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::Clicked => {
@@ -49,6 +40,15 @@ impl Component for Item {
             }
         }
         false
+    }
+
+    fn change(&mut self, props: Props) -> ShouldRender {
+        if self.props != props {
+            self.props = props;
+            true
+        } else {
+            false
+        }
     }
 
     fn view(&self) -> Html {

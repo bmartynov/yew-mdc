@@ -6,6 +6,7 @@ pub struct Supporting {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub id: String,
@@ -21,6 +22,10 @@ impl Component for Supporting {
         Self { props }
     }
 
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        false
+    }
+
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         if self.props != props {
             self.props = props;
@@ -28,10 +33,6 @@ impl Component for Supporting {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
-        false
     }
 
     fn view(&self) -> Html {

@@ -42,9 +42,14 @@ impl Component for Switch {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        self.inner = self.node_ref.cast::<Element>().map(MDCSwitch::new);
-        false
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::StateChanged => {
+                self.state = !self.state;
+                self.props.onchange.emit(self.state);
+                true
+            }
+        }
     }
 
     fn change(&mut self, props: Props) -> ShouldRender {
@@ -53,16 +58,6 @@ impl Component for Switch {
             true
         } else {
             false
-        }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::StateChanged => {
-                self.state = !self.state;
-                self.props.onchange.emit(self.state);
-                true
-            }
         }
     }
 

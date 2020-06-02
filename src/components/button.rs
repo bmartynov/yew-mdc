@@ -40,6 +40,7 @@ pub struct Props {
     pub children: Children,
     #[prop_or_default]
     pub id: String,
+    #[prop_or_default]
     pub text: String,
     #[prop_or_default]
     pub style: Style,
@@ -61,8 +62,8 @@ pub enum Msg {
 }
 
 impl Component for Button {
-    type Properties = Props;
     type Message = Msg;
+    type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         #[cfg(feature = "dialog")]
@@ -83,8 +84,12 @@ impl Component for Button {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        self.ripple = self.node_ref.cast::<Element>().map(MDCRipple::new);
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::Clicked(ev) => {
+                self.props.onclick.emit(ev);
+            }
+        }
         false
     }
 
@@ -105,15 +110,6 @@ impl Component for Button {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::Clicked(ev) => {
-                self.props.onclick.emit(ev);
-            }
-        }
-        false
     }
 
     fn view(&self) -> Html {

@@ -60,8 +60,17 @@ impl Component for TextField {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        self.inner = self.node_ref.cast::<Element>().map(MDCTextField::new);
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::ValueChanged(s) => {
+                self.props.onchange.emit(s);
+            }
+            Msg::FocusRequested => {
+                if let Some(ref inner) = self.inner {
+                    inner.focus();
+                }
+            }
+        };
         false
     }
 
@@ -79,20 +88,6 @@ impl Component for TextField {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::ValueChanged(s) => {
-                self.props.onchange.emit(s);
-            }
-            Msg::FocusRequested => {
-                if let Some(ref inner) = self.inner {
-                    inner.focus();
-                }
-            }
-        };
-        false
     }
 
     fn view(&self) -> Html {

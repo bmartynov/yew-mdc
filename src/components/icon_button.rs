@@ -45,6 +45,7 @@ pub struct IconButton {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub id: String,
@@ -77,12 +78,12 @@ impl Component for IconButton {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        self.ripple = self.node_ref.cast::<Element>().map(|elem| {
-            let ripple = MDCRipple::new(elem);
-            ripple.set_unbounded(true);
-            ripple
-        });
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::Clicked(event) => {
+                self.props.onclick.emit(event);
+            }
+        }
         false
     }
 
@@ -93,15 +94,6 @@ impl Component for IconButton {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::Clicked(event) => {
-                self.props.onclick.emit(event);
-            }
-        }
-        false
     }
 
     fn view(&self) -> Html {

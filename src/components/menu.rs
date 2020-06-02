@@ -4,6 +4,7 @@ use web_sys::Element;
 use yew::prelude::*;
 
 pub mod item;
+
 pub use item::Item;
 
 pub struct Menu {
@@ -16,6 +17,7 @@ pub struct Menu {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub id: String,
@@ -52,6 +54,15 @@ impl Component for Menu {
         }
     }
 
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::Closed => {
+                self.props.onclose.emit(());
+            }
+        }
+        false
+    }
+
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         if let Some(inner) = &self.inner {
             if props.open != self.props.open {
@@ -79,33 +90,6 @@ impl Component for Menu {
         } else {
             false
         }
-    }
-
-    fn mounted(&mut self) -> ShouldRender {
-        if let Some(elem) = self.node_ref.cast::<Element>() {
-            // Our root element has the mdc-menu class...
-            let menu = MDCMenu::new(elem.clone());
-            menu.set_fixed_position(self.props.fixed_position);
-            if let Some((x, y)) = self.props.absolute_position {
-                menu.set_absolute_position(x, y);
-            }
-            menu.set_open(self.props.open);
-            self.inner = Some(menu);
-            // ...but is also an mdc-menu-surface
-            let surface = MDCMenuSurface::new(elem);
-            surface.listen("MDCMenuSurface:closed", &self.close_callback);
-            self.surface = Some(surface);
-        }
-        false
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
-        match msg {
-            Msg::Closed => {
-                self.props.onclose.emit(());
-            }
-        }
-        false
     }
 
     fn view(&self) -> Html {

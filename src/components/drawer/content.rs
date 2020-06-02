@@ -8,6 +8,7 @@ pub struct Content {
 pub struct Props {
     #[prop_or_default]
     pub id: String,
+    #[prop_or_default]
     pub children: Children,
 }
 
@@ -19,6 +20,10 @@ impl Component for Content {
         Self { props }
     }
 
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        false
+    }
+
     fn change(&mut self, props: Props) -> ShouldRender {
         if self.props != props {
             self.props = props;
@@ -26,10 +31,6 @@ impl Component for Content {
         } else {
             false
         }
-    }
-
-    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
-        false
     }
 
     fn view(&self) -> Html {

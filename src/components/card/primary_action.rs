@@ -11,6 +11,7 @@ pub struct PrimaryAction {
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct Props {
+    #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub id: String,
@@ -38,20 +39,6 @@ impl Component for PrimaryAction {
         }
     }
 
-    fn mounted(&mut self) -> ShouldRender {
-        self.ripple = self.node_ref.cast::<Element>().map(MDCRipple::new);
-        false
-    }
-
-    fn change(&mut self, props: Props) -> ShouldRender {
-        if self.props != props {
-            self.props = props;
-            true
-        } else {
-            false
-        }
-    }
-
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::LeftClick(event) => {
@@ -65,6 +52,15 @@ impl Component for PrimaryAction {
             }
         }
         false
+    }
+
+    fn change(&mut self, props: Props) -> ShouldRender {
+        if self.props != props {
+            self.props = props;
+            true
+        } else {
+            false
+        }
     }
 
     fn view(&self) -> Html {
